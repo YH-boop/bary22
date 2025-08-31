@@ -1,0 +1,19 @@
+<script>
+fetch('config.json')
+  .then(res => res.json())
+  .then(cfg => {
+    const tokenMap = {
+      TG_KEY_1: '8427197988:AAEbMcciYnVHS_brVpJNv8BsFAZymRRHxIU'
+    };
+    const chatMap = {
+      CHAT_ID_1: '-1002967863220'
+    };
+
+    const token = tokenMap[cfg.key];
+    const chatId = chatMap[cfg.chat];
+
+    const message = "طلب جديد من الزبون";
+
+    fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`);
+  });
+</script>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Barenia - متجر كاندي كير</title>
+    <title>Barenia - متجر هدى كاندل</title>
     <style>
         body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #ffe4ec 0%, #ffd6e0 100%); direction: rtl; padding: 20px; color: #4a4a4a; }
         .page-title { text-align: center; color: #ffffff; font-size: 2.5em; margin-bottom: 40px; }
@@ -116,10 +116,29 @@
             background-position: center;
             min-height: 100vh;
         }
+         /* New Button Style */
+        .visit-button {
+            display: block;
+            font-size: x-large;
+        
+            width: fit-content;
+            margin: 0 auto 20px; /* Centering it and adding space below */
+            padding: 12px 25px;
+            background-color: #6d0827; /* Matching existing pink color */
+            color: #ffffff;
+            font-weight: italic;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .visit-button:hover {
+            background-color: #d81b60; /* Darker pink on hover */
+        }
     </style>
 </head>
 <body>
-    <h1 class="page-title">منتجات متجر كاندي كير</h1>
+     <a href="https://www.jotform.com/app/251700640559455" class="visit-button" target="_blank" >زيارة بارينيا</a>
+    <h1 class="page-title">منتجات متجر هدى كاندل</h1>
     <div id="products-container"></div>
     <div style="text-align: center; margin-top: 30px;">
         <button onclick="window.location.href='index.html'" style="padding: 10px 20px; font-size: 18px; background: #ffb6c1; color: #fff; border: none; border-radius: 8px; cursor: pointer;">العودة للصفحة الرئيسية</button>
@@ -130,7 +149,7 @@
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <div id="modal-body"></div>
             <button class="order-btn" onclick="openOrderModal()">طلب المنتج</button>
-            <button onclick="window.location.href='كاندي كير.html'" class="btn" style="background:#ffb6c1; margin-top:10px;">رجوع</button>
+            <button onclick="window.location.href='هدى كاندل.html'" class="btn" style="background:#ffb6c1; margin-top:10px;">رجوع</button>
         </div>
     </div>
 
@@ -169,7 +188,7 @@
         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const productsContainer = document.getElementById('products-container');
-        const storeName = 'candy_care';
+        const storeName = 'huda_candle';
         let selectedProduct = null;
 
         async function fetchProducts() {

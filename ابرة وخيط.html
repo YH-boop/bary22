@@ -116,9 +116,28 @@
             background-position: center;
             min-height: 100vh;
         }
+        /* New Button Style */
+        .visit-button {
+            display: block;
+            font-size: x-large;
+        
+            width: fit-content;
+            margin: 0 auto 20px; /* Centering it and adding space below */
+            padding: 12px 25px;
+            background-color: #6d0827; /* Matching existing pink color */
+            color: #ffffff;
+            font-weight: italic;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .visit-button:hover {
+            background-color: #d81b60; /* Darker pink on hover */
+        }
     </style>
 </head>
 <body>
+    <a href="https://www.jotform.com/app/251700640559455" class="visit-button" target="_blank" >زيارة بارينيا</a>
     <h1 class="page-title">منتجات متجر ابرة وخيط</h1>
     <div id="products-container"></div>
     <div style="text-align: center; margin-top: 30px;">
@@ -130,7 +149,7 @@
             <span class="close-btn" onclick="closeModal()">&times;</span>
             <div id="modal-body"></div>
             <button class="order-btn" onclick="openOrderModal()">طلب المنتج</button>
-            <button onclick="window.location.href='ابرة وخيط.html'" class="btn" style="background:#ffb6c1; margin-top:10px;">رجوع</button>
+           <button onclick="closeModal()" class="btn" style="background:#ffb6c1; margin-top:10px;">رجوع</button>
         </div>
     </div>
 

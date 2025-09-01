@@ -181,8 +181,7 @@
             <span class="close" onclick="closeModal()">&times;</span>
             <div id="modal-body"></div>
             <button onclick="openOrderModal()" style="margin-top: 10px; padding: 30px; color: #ffffff; background-color: #e75480; border-top-right-radius:20px; border-bottom-left-radius:20px; ">طلب المنتج</button>
-            <button onclick="window.location.href='customerpage.html'" class="btn" style="background:#ffb6c1; margin-top:10px;">رجوع</button>
-        </div>
+           <button onclick="closeModal()" class="btn" style="background:#ffb6c1; margin-top:10px;">رجوع</button>
     </div>
 
     <div id="orderModal" class="modal" style="display:none;">
@@ -269,7 +268,7 @@
             const { data: products, error } = await supabase
                 .from('products')
                 .select('*')
-                .order('store_name', { ascending: true });
+                .order('id', { ascending: false });
 
             if (error) {
                 console.error('Error fetching products:', error);

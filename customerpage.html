@@ -214,37 +214,69 @@
         let selectedProduct = null;
         
         // الدوال الخاصة بالنوافذ المنبثقة (Modals)
-        function openProductModal(product) {
-            selectedProduct = product;
-            const modal = document.getElementById('productModal');
-            const modalBody = document.getElementById('modal-body');
-            
-            // عرض الصورة الرئيسية
-            let mediaHTML = product.type === 'video' 
+
+       // ... (الكود السابق بدون تغيير)
+
+// دالة جديدة لتغيير الوسائط الرئيسية في المودال
+function changeMainMedia(src, type) {
+    const mainMediaContainer = document.getElementById('modal-main-media');
+    mainMediaContainer.innerHTML = ''; // تفريغ المحتوى الحالي
+
+    let mediaElement;
+    if (type === 'video') {
+        mediaElement = document.createElement('video');
+        mediaElement.setAttribute('controls', '');
+    } else {
+        mediaElement = document.createElement('img');
+    }
+    mediaElement.src = src;
+    mediaElement.style.maxWidth = '100%';
+    mediaElement.style.borderRadius = '8px';
+    mainMediaContainer.appendChild(mediaElement);
+}
+
+function openProductModal(product) {
+    selectedProduct = product;
+    const modal = document.getElementById('productModal');
+    const modalBody = document.getElementById('modal-body');
+    
+    // محتوى الوسائط الرئيسية (سيتغير بالضغط على الصور المصغرة)
+    let mainMediaHTML = `
+        <div id="modal-main-media">
+            ${product.type === 'video' 
                 ? `<video src="${product.main_image_url}" controls style="max-width:100%; border-radius:8px;"></video>` 
-                : `<img src="${product.main_image_url}" style="max-width:100%; border-radius:8px;">`;
-            
-            // عرض الصور الثانوية
-            let extraImagesHTML = '';
-            const extraUrls = product.extra_images_urls ? product.extra_images_urls.urls || [] : [];
-            if (Array.isArray(extraUrls) && extraUrls.length > 0) {
-                extraImagesHTML = extraUrls.map(url => {
-                    return product.type === 'video' 
-                        ? `<video src="${url}" controls></video>` 
-                        : `<img src="${url}" alt="صورة إضافية">`;
-                }).join('');
-            }
-            
-            modalBody.innerHTML = `
-                ${mediaHTML}
-                <div class="modal-images">${extraImagesHTML}</div>
-                <h3 style="color:#d81b60;">${product.name}</h3>
-                <p>${product.description}</p>
-                <p style="font-weight:bold; color:#e75480;">السعر: ${product.price} د.ع</p>
-                <p>المتجر: ${product.store_name}</p>
-            `;
-            modal.style.display = 'flex';
-        }
+                : `<img src="${product.main_image_url}" style="max-width:100%; border-radius:8px;">`}
+        </div>
+    `;
+    
+    // عرض الصور الثانوية (مع إضافة onclick لتغيير الصورة الرئيسية)
+    let extraImagesHTML = '';
+    const allMediaUrls = [product.main_image_url, ...(product.extra_images_urls ? product.extra_images_urls.urls || [] : [])];
+    
+    if (allMediaUrls.length > 0) {
+        extraImagesHTML = allMediaUrls.map(url => {
+            const mediaType = url === product.main_image_url ? product.type : (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.ogg') ? 'video' : 'image');
+            return mediaType === 'video' 
+                ? `<video src="${url}" onclick="changeMainMedia('${url}', 'video')" style="cursor:pointer;"></video>` 
+                : `<img src="${url}" alt="صورة إضافية" onclick="changeMainMedia('${url}', 'image')" style="cursor:pointer;">`;
+        }).join('');
+    }
+    
+    modalBody.innerHTML = `
+        ${mainMediaHTML}
+        <div class="modal-images">${extraImagesHTML}</div>
+        <h3 style="color:#d81b60;">${product.name}</h3>
+        <p>${product.description}</p>
+        <p style="font-weight:bold; color:#e75480;">السعر: ${product.price} د.ع</p>
+        <p>المتجر: ${product.store_name}</p>
+    `;
+    modal.style.display = 'flex';
+}
+
+// ... (بقية الدوال والواجهات الأخرى)
+
+// تأكد من أن الدالة الجديدة متاحة عالميًا
+window.changeMainMedia = changeMainMedia;
 
         function closeModal() {
             document.getElementById('productModal').style.display = 'none';

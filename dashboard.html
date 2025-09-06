@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المتجر</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #6d1d4d;
+            font-family: 'Tajawal', sans-serif;
+            border-bottom: 2px solid #f0e6f2;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .upload-form label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .upload-form input[type="file"],
+        .upload-form select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .upload-form button {
+            background-color: #6d1d4d;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-form button:hover {
+            background-color: #831566;
+        }
+
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .image-item {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .image-item:hover {
+            transform: scale(1.05);
+        }
+
+        .image-item img,
+        .image-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-item .delete-btn {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+        
+        .image-item .delete-btn:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>لوحة تحكم بارينيا</h2>
+
+        <div class="section">
+            <h3>رفع الصور والفيديوهات</h3>
+            <form id="upload-form" class="upload-form">
+                <label for="file-input">اختر ملف:</label>
+                <input type="file" id="file-input" required>
+                <label for="image-type">نوع الملف:</label>
+                <select id="image-type">
+                    <option value="cover">صورة الغلاف</option>
+                    <option value="logo">شعار المتجر</option>
+                    <option value="product">صورة سلايدر</option>
+                    <option value="new_product">منتج جديد</option>
+                </select>
+                <button type="submit">رفع</button>
+            </form>
+        </div>
+
+        <div class="section">
+            <h3>صور وفيديوهات المتجر</h3>
+            <div id="image-gallery" class="image-gallery">
+                </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+        const SUPABASE_URL = 'https://tpgqbhdpsyqzpwvsmkro.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwZ3FiaGRwc3lxenB3dnNta3JvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NDA1NjMsImV4cCI6MjA3MjQxNjU2M30.I2vAeCOkz08l-EfDdeWibIRNYS-mzMYVRC0snsGNP0M';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const uploadForm = document.getElementById('upload-form');
+        const fileInput = document.getElementById('file-input');
+        const imageTypeSelect = document.getElementById('image-type');
+        const imageGallery = document.getElementById('image-gallery');
+        
+        async function checkAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                await loadDashboard();
+            } else {
+                window.location.href='login.html';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', checkAuth);
+
+        // دالة الرفع
+        async function uploadAndSaveUrl(file, type) {
+            try {
+                const fileName = `${Date.now()}-${file.name}`;
+                const { data, error } = await supabase.storage
+                    .from('images') // تم التغيير هنا
+                    .upload(fileName, file);
+                
+                if (error) throw error;
+                
+                const { data: { publicUrl }, error: urlError } = supabase
+                    .storage
+                    .from('images') // وتم التغيير هنا
+                    .getPublicUrl(fileName);
+
+                if (urlError) throw urlError;
+                
+                const { data: dbData, error: dbError } = await supabase
+                    .from('photos')
+                    .insert([{ url: publicUrl, type: type }]);
+                
+                if (dbError) throw dbError;
+
+                alert('تم رفع الملف بنجاح!');
+                location.reload();
+
+            } catch (error) {
+                console.error('Error uploading file:', error.message);
+                alert('فشل رفع الملف: ' + error.message);
+            }
+        }
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = fileInput.files[0];
+            const type = imageTypeSelect.value;
+            if (file) {
+                await uploadAndSaveUrl(file, type);
+            }
+        });
+
+        // دالة العرض
+        async function loadDashboard() {
+            try {
+                const { data, error } = await supabase
+                    .from('photos')
+                    .select('*');
+
+                if (error) throw error;
+                
+                imageGallery.innerHTML = '';
+                data.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'image-item';
+                    itemDiv.dataset.id = item.id; 
+
+                    const isVideo = item.url.includes('.mp4') || item.url.includes('.mov') || item.url.includes('.webm');
+                    if (isVideo) {
+                        itemDiv.innerHTML = `<video src="${item.url}" controls></video>`;
+                    } else {
+                        itemDiv.innerHTML = `<img src="${item.url}" alt="Dashboard Image">`;
+                    }
+                    
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'delete-btn';
+                    deleteButton.innerHTML = '<i class="fas fa-times"></i>';
+                    deleteButton.onclick = () => deletePhoto(item.id, item.url);
+                    
+                    itemDiv.appendChild(deleteButton);
+                    imageGallery.appendChild(itemDiv);
+                });
+            } catch (error) {
+                console.error('Error loading dashboard:', error.message);
+            }
+        }
+
+        // دالة الحذف المحدثة
+        async function deletePhoto(id, url) {
+            try {
+                const urlParts = url.split('/');
+                const fileName = urlParts[urlParts.length - 1];
+
+                const { error: dbError } = await supabase
+                    .from('photos')
+                    .delete()
+                    .eq('id', id);
+
+                if (dbError) throw dbError;
+
+                const { error: storageError } = await supabase
+                    .storage
+                    .from('images') // وتم التغيير هنا
+                    .remove([fileName]);
+
+                if (storageError) throw storageError;
+
+                const itemToRemove = document.querySelector(`.image-item[data-id='${id}']`);
+                if (itemToRemove) {
+                    itemToRemove.remove();
+                }
+
+                alert('تم حذف الملف بنجاح.');
+
+            } catch (error) {
+                console.error('Error deleting photo:', error.message);
+                alert('فشل حذف الملف: ' + error.message);
+            }
+        }
+
+        // استخدام ميزة Realtime للاستماع للتغييرات
+        const channel = supabase.channel('realtime_photos');
+
+        channel.on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'photos' },
+            (payload) => {
+                console.log('Change received!', payload);
+                loadDashboard();
+            }
+        ).subscribe();
+    </script>
+</body>
+</html>

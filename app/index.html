@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Barenia</title>
+    <meta charset="UTF-8" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            /* تم تحديث رابط الصورة هنا */
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://i.ibb.co/8gLS17SV/photo-1570475735025-6cd1cd5c779d.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-box {
+            background: rgba(255, 240, 246, 0.9);
+            padding: 48px 32px;
+            border-radius: 24px;
+            box-shadow: 0 2px 16px rgba(248, 187, 208, 0.7);
+            text-align: center;
+        }
+        h1 {
+            color: #d81b60;
+            margin-bottom: 32px;
+        }
+        .main-btn {
+            background: #ffb6c1;
+            color: #fff;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 12px;
+            font-size: 22px;
+            cursor: pointer;
+            margin: 16px 0;
+            transition: background 0.2s;
+        }
+        .main-btn:hover {
+            background: #d81b60;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #e75480;
+            position: relative;
+        }
+        .close {
+            color: #e75480;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+        /* Customer page specific styles */
+        .product-card {
+            background: #fdf2f7;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(248, 187, 208, 0.3);
+            text-align: right;
+            cursor: pointer;
+        }
+        .product-card img, .product-card video {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .product-card h3 {
+            color: #c2185b;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        .product-card p {
+            margin: 0 0 5px;
+            color: #616161;
+        }
+        .product-card .price {
+            font-weight: bold;
+            color: #ad1457;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-box">
+        <h1>Barenia</h1>
+        <button class="main-btn" onclick="location.href='admin.html'">دخول كصاحب العمل</button>
+        <br>
+        <button class="main-btn" onclick="location.href='customerPage.html'">دخول كزبون</button>
+        <br>
+        <button class="main-btn" onclick="location.href='manager.html'">الادارة  </button> 
+        <br>
+        <button class="main-btn" onclick="location.href='stores.html'">المتاجر  </button>
+    </div>
+
+    <div id="customerPage" style="display:none;">
+        <h1 style="color:#d81b60;margin-bottom:32px;">Barenia</h1>
+        <button onclick="backToHomeFromCustomer()" style="margin-bottom:20px;background:#fff0f6;color:#d81b60;border:1px solid #e75480;border-radius:8px;padding:8px 20px;">رجوع للرئيسية</button>
+        <div class="container" style="max-width:1200px;margin:40px auto;background:#fff0f6;border-radius:16px;box-shadow:0 2px 16px #f8bbd0;padding:32px;">
+            <div id="grid" class="product-grid"></div>
+        </div>
+    </div>
+    
+    <div id="productDescModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProductDesc()">&times;</span>
+            <div id="productDescContent"></div>
+            <button id="orderBtn" onclick="openOrderModal()" style="background
+:#ffb6c1;color:#fff;border:none;padding:12px 30px;border-radius:8px;font-size:18px;cursor:pointer;margin-top:20px;">اطلب الآن</button>
+        </div>
+    </div>
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeOrderModal()">&times;</span>
+            <h2 style="color:#d81b60;margin-bottom:20px;">نموذج الطلب</h2>
+            <form id="orderForm">
+                <label for="name">الاسم الكامل:</label><br>
+                <input type="text" id="name" name="name" required style="width:100%;padding:8px;margin:8px 0;border:1px solid #ccc;border-radius:4px;"><br>
+                <label for="phone">رقم الهاتف:</label><br>
+                <input type="tel" id="phone" name="phone" required style="width:100%;padding:8px;margin:8px 0;border:1px solid #ccc;border-radius:4px;"><br>
+                <label for="address">العنوان:</label><br>
+                <input type="text" id="address" name="address" required style="width:100%;padding:8px;margin:8px 0;border:1px solid #ccc;border-radius:4px;"><br>
+                <button type="submit" style="background:#ffb6c1;color:#fff;border:none;padding:12px 30px;border-radius:8px;font-size:18px;cursor:pointer;margin-top:10px;">إرسال الطلب</button>
+            </form>
+        </div>
+    </div>
+   <script type="module">
+import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+
+const SUPABASE_URL = 'https://nssjavwnfossgwtmlhfu.supabase.co';
+const SUPABASE_KEY = ' eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zc2phdnduZm9zc2d3dG1saGZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1MjA0NDIsImV4cCI6MjA3MjA5NjQ0Mn0.sLHPtyuCfeS75vU-Lwe-ZNqywyVg0IprtgC7y3La6zk';
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const grid = document.getElementById('grid');
+const customerPage = document.getElementById('customerPage');
+const mainBox = document.querySelector('.main-box');
+const productDescModal = document.getElementById('productDescModal');
+const productDescContent = document.getElementById('productDescContent');
+const orderModal = document.getElementById('orderModal');
+const orderForm = document.getElementById('orderForm');
+const orderBtn = document.getElementById('orderBtn');
+
+let selectedProduct = null;
+let isOrdering = false;
+
+function renderProductCard(product) {
+  const div = document.createElement('div');
+  div.className = 'product-card';
+  const mediaHTML = product.type === 'video'
+    ? `<video src="${product.src}" controls></video>`
+    : `<img src="${product.src}" alt="${product.name}">`;
+  div.innerHTML = `
+    ${mediaHTML}
+    <h3>${product.name}</h3>
+    <p>${product.description}</p>
+    <p class="price">${product.price}</p>
+  `;
+  div.onclick = () => showProductDesc(product.id);
+  return div;
+}
+
+function showCustomerPage() {
+  mainBox.style.display = 'none';
+  customerPage.style.display = 'block';
+  loadProducts();
+}
+
+function backToHomeFromCustomer() {
+  customerPage.style.display = 'none';
+  mainBox.style.display = 'flex';
+}
+
+async function loadProducts() {
+  const { data: products, error } = await supabase.from('products').select('*').order('id', { ascending: false });
+  if (error) {
+    console.error('Error fetching products:', error);
+    grid.innerHTML = '<p style="text-align:center; color:red;">فشل تحميل المنتجات.</p>';
+    return;
+  }
+  grid.innerHTML = '';
+  products.forEach(product => {
+    grid.appendChild(renderProductCard(product));
+  });
+}
+
+function showProductDesc(productId) {
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+
+  selectedProduct = product;
+  const mediaTag = product.type === 'image'
+    ? `<img src="${product.src}" style="width:100%;border-radius:8px;margin-bottom:10px;">`
+    : `<video controls style="width:100%;border-radius:8px;margin-bottom:10px;"><source src="${product.src}" type="video/mp4"></video>`;
+
+  productDescContent.innerHTML = `
+    ${mediaTag}
+    <h2 style="color:#d81b60;margin-bottom:10px;">${product.name}</h2>
+    <p>${product.description}</p>
+    <p class="price" style="font-weight:bold;color:#ad1457;">${product.price}</p>
+  `;
+  productDescModal.style.display = 'block';
+}
+
+function closeProductDesc() {
+  productDescModal.style.display = 'none';
+}
+
+function openOrderModal() {
+  orderModal.style.display = 'block';
+  orderForm.reset();
+}
+
+function closeOrderModal() {
+  orderModal.style.display = 'none';
+}
+
+orderForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (isOrdering) return;
+
+  const orderData = {
+    name: document.getElementById('name').value,
+    phone: document.getElementById('phone').value,
+    address: document.getElementById('address').value,
+    product_name: selectedProduct.name,
+    product_price: selectedProduct.price,
+    store_name: selectedProduct.store_name || 'غير محدد',
+    timestamp: new Date().toISOString()
+  };
+
+  try {
+    isOrdering = true;
+    orderBtn.textContent = 'جاري الإرسال...';
+
+    const { error } = await supabase.from('orders').insert([orderData]);
+    if (error) throw error;
+
+    alert('تم إرسال طلبك بنجاح!');
+    closeOrderModal();
+    closeProductDesc();
+  } catch (err) {
+    console.error('فشل إرسال الطلب:', err);
+    alert('فشل إرسال الطلب. تأكد من الاتصال وحاول مرة أخرى.');
+  } finally {
+    isOrdering = false;
+    orderBtn.textContent = 'اطلب الآن';
+  }
+});
+
+function setupRealtimeListener() {
+  supabase
+    .from('products')
+    .on('*', payload => {
+      console.log('Realtime update:', payload);
+      loadProducts();
+    })
+    .subscribe();
+}
+
+// ربط زر الزبون
+document.querySelector('.main-btn:nth-child(3)').onclick= showCustomerPage;
+document.getElementById('orderBtn').addEventListener('click', openOrderModal);
+document.getElementById('closeOrderModalBtn')?.addEventListener('click', closeOrderModal);
+document.getElementById('closeProductDescBtn')?.addEventListener('click', closeProductDesc);
+document.querySelector('button[onclick="backToHomeFromCustomer()"]').addEventListener('click', backToHomeFromCustomer);
+
+// تشغيل الصفحة
+setupRealtimeListener();
+</script>

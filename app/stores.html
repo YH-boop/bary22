@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة المتاجر</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 50px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        gap: 5px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffe4ec 0%, #ffd6e0 100%);
+        }
+         body {
+        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://i.ibb.co/8gLS17SV/photo-1570475735025-6cd1cd5c779d.jpg');
+        background-size: cover;);
+        background-repeat: no-repeat;
+        background-position: center;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    
+    }
+        .store-button {
+            display: block;
+            margin-bottom: 10px; /* Optional: adds a little space between the buttons */;
+            padding: 20px 40px;
+            font-size: 18px;
+            color: white;
+            background-color: #e75480;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .store-button:hover {
+            background-color: #d81b60;
+        }
+    </style>
+</head>
+<body>
+    <a href="متجر كوكتيل.html" class="store-button">كوكتيل</a>
+    <a href="رمان.html" class="store-button">رمان</a>
+    <a href="كوشة وكركوشة.html" class="store-button">كوشة وكركوشة</a>
+    <a href="ابرة وخيط.html" class="store-button">ابرة وخيط</a>
+    <a href="كاندي كير.html" class="store-button">كاندي كير</a>
+    <a href="فستقة.html" class="store-button">فستقة</a>
+    <a href="هدى كاندل.html" class="store-button">هدى كاندل</a>
+    <a href="خياطة الملاك.html" class="store-button">خياطة الملاك</a>
+    <a href="الشفق.html" class="store-button">الشفق</a>
+
+<script>
+import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+
+const SUPABASE_URL = 'https://nssjavwnfossgwtmlhfu.supabase.co';
+const SUPABASE_KEY = ' eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zc2phdnduZm9zc2d3dG1saGZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1MjA0NDIsImV4cCI6MjA3MjA5NjQ0Mn0.sLHPtyuCfeS75vU-Lwe-ZNqywyVg0IprtgC7y3La6zk';
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+</script>
+</body>
+</html>

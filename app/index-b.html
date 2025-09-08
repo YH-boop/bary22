@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر بارينيا - Barenia Store</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(180deg, #f5e9f8 0%, #e9f0f9 100%);
+            margin: 0;
+            padding: 0;
+            background-image: url("https://i.ibb.co/LDKG5rjK/photo.jpg");
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.6);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        .header a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 18px;
+            margin-left: 15px;
+        }
+        
+        .header .left-icons {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            text-align: center;
+            margin: 20px 0;
+            animation: fadeIn 1.2s ease-in-out;
+            color: #fff;
+        }
+        
+        .logo img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        #cover-photo {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            animation: fadeIn 1.4s ease-in-out;
+        }
+        
+        .slider-container {
+            position: relative;
+            animation: fadeIn 1.6s ease-in-out;
+        }
+
+        .slider-wrapper {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 15px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            scroll-behavior: smooth;
+        }
+        
+        .slider-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .slider {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .slider img, .slider video {
+            flex-shrink: 0;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 10px 15px;
+            border-radius: 50%;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+        
+        .slider-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        #prev-btn {
+            right: -25px;
+        }
+
+        #next-btn {
+            left: -25px;
+        }
+        
+        .buttons-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+            animation: fadeIn 1.8s ease-in-out;
+        }
+        
+        .buttons-section button, .buttons-section a {
+            background-color: #6d1d4d;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .buttons-section button:hover, .buttons-section a:hover {
+            background-color: #831566;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .unique-font {
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .footer button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .new-products-section {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .new-products-section h3 {
+            color: #6d1d4d;
+        }
+        
+        #new-products-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            justify-items: center;
+        }
+        
+        .new-product-item {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .new-product-item img,
+        .new-product-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .new-product-item img:hover,
+        .new-product-item video:hover {
+            transform: scale(1.05);
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-btn {
+            background: none;
+            color: white;
+            padding: 0;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .dropdown-btn:hover {
+            text-decoration: underline;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 5px;
+            margin-top: 10px;
+            right: 0;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="dropdown">
+            <a href="#" onclick="toggleMenu()" class="dropdown-btn">☰ الصفحة الرئيسية</a>
+            <div id="myDropdown" class="dropdown-content">
+                <a href="#">منصة الابداع</a>
+                <a href="#">من نحن</a>
+            </div>
+        </div>
+        <div class="left-icons">
+            <a href="#"><i class="fas fa-shopping-cart"></i></a>
+            <a href="login.html"><i class="fas fa-cog"></i></a>
+        </div>
+    </div>
+    
+    <div class="logo">
+        <img id="profile-logo" src="https://via.placeholder.com/100/e9f0f9/333333?text=B" alt="Barenia Logo">
+        <h3>Barenia</h3>
+    </div>
+    
+    <img id="cover-photo" src="https://via.placeholder.com/600x200/f5e9f8/333333?text=Cover+Photo" alt="Cover Photo">
+
+    <div class="slider-container">
+        <div class="slider-wrapper" id="slider-wrapper">
+            <div class="slider" id="product-slider">
+            </div>
+        </div>
+        <button class="slider-btn" id="prev-btn">‹</button>
+        <button class="slider-btn" id="next-btn">›</button>
+    </div>
+    
+    <div class="buttons-section">
+        <a href="p4.html" class="unique-font">تصفح المنتجات</a>
+        <a href="stores.html" class="unique-font">متاجر شركائنا</a>
+        <a href="admin.html" class="unique-font">تسجيل دخول اصحاب المتاجر</a>
+        
+    </div>
+
+    <div class="new-products-section">
+        <h3>أحدث المنتجات</h3>
+        <div id="new-products-display">
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>جميع الحقوق محفوظة &copy; 2025 منصة بارينيا</p>
+    </div>
+    
+
+    <div id="loading-spinner" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: rgb(255, 255, 255); position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">جاري التحميل ...
+        <i class="fas fa-spinner fa-spin fa-3x" style="color: #6d1d4d;"></i>
+    </div>
+    
+</div>
+    
+<script type="module">
+    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+    const SUPABASE_URL = 'https://tpgqbhdpsyqzpwvsmkro.supabase.co'; 
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwZ3FiaGRwc3lxenB3dnNta3JvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NDA1NjMsImV4cCI6MjA3MjQxNjU2M30.I2vAeCOkz08l-EfDdeWibIRNYS-mzMYVRC0snsGNP0M';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const coverPhoto = document.getElementById('cover-photo');
+    const profileLogo = document.getElementById('profile-logo');
+    const slider = document.getElementById('product-slider');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const newProductsDisplay = document.getElementById('new-products-display');
+    const loadingSpinner = document.getElementById('loading-spinner');
+
+    function renderItem(item, container) {
+        const isVideo = item.url.includes('.mp4') || item.url.includes('.mov') || item.url.includes('.webm');
+        let element;
+
+        if (container.id === 'new-products-display') {
+            element = document.createElement('div');
+            element.className = 'new-product-item';
+            element.dataset.id = item.id;
+            element.dataset.type = item.type;
+            if (isVideo) {
+                element.innerHTML = `<video src="${item.url}" controls></video>`;
+            } else {
+                element.innerHTML = `<img src="${item.url}" alt="New Product">`;
+            }
+        } else if (container.id === 'product-slider') {
+            element = document.createElement(isVideo ? 'video' : 'img');
+            element.src = item.url;
+            element.alt = "Product Image";
+            element.dataset.id = item.id;
+            element.dataset.type = item.type;
+            if (isVideo) {
+                element.controls = true;
+            }
+        }
+        
+        container.appendChild(element);
+    }
+    
+    async function loadInitialData() {
+        loadingSpinner.style.display = 'flex'; 
+
+        try {
+            const { data, error } = await supabase.from('photos').select('*');
+            if (error) throw error;
+
+            const coverImage = data.find(item => item.type === 'cover');
+            const logoImage = data.find(item => item.type === 'logo');
+            const sliderImages = data.filter(item => item.type === 'product');
+            const newProducts = data.filter(item => item.type === 'new_product');
+
+            if (coverImage) {
+                coverPhoto.src = coverImage.url;
+                coverPhoto.dataset.id = coverImage.id;
+            }
+            if (logoImage) {
+                profileLogo.src = logoImage.url;
+                profileLogo.dataset.id = logoImage.id;
+            }
+            
+            slider.innerHTML = '';
+            sliderImages.forEach(item => renderItem(item, slider));
+            
+            newProductsDisplay.innerHTML = '';
+            newProducts.forEach(item => renderItem(item, newProductsDisplay));
+            
+            if (sliderImages.length === 0) {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            } else {
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+            }
+
+        } catch (error) {
+            console.error('Error fetching data:', error.message);
+        } finally {
+            loadingSpinner.style.display = 'none';
+        }
+    }
+
+    const handleRealtimeUpdate = (payload) => {
+        const { eventType, new: newData, old: oldData } = payload;
+        
+        if (eventType === 'INSERT') {
+            if (newData.type === 'cover') {
+                coverPhoto.src = newData.url;
+                coverPhoto.dataset.id = newData.id;
+            } else if (newData.type === 'logo') {
+                profileLogo.src = newData.url;
+                profileLogo.dataset.id = newData.id;
+            } else if (newData.type === 'product') {
+                renderItem(newData, slider);
+            } else if (newData.type === 'new_product') {
+                renderItem(newData, newProductsDisplay);
+            }
+            
+        } else if (eventType === 'UPDATE') {
+            if (newData.type === 'cover') {
+                coverPhoto.src = newData.url;
+            } else if (newData.type === 'logo') {
+                profileLogo.src = newData.url;
+            } else {
+                const element = document.querySelector(`[data-id='${newData.id}']`);
+                if (!element) return;
+                
+                const isVideo = newData.url.includes('.mp4') || newData.url.includes('.mov') || newData.url.includes('.webm');
+                if (element.tagName.toLowerCase() === 'img' || element.tagName.toLowerCase() === 'video') {
+                    element.src = newData.url;
+                    if (isVideo) element.controls = true; else element.removeAttribute('controls');
+                } else if (element.className.includes('new-product-item')) {
+                    if (isVideo) {
+                        element.innerHTML = `<video src="${newData.url}" controls></video>`;
+                    } else {
+                        element.innerHTML = `<img src="${newData.url}" alt="New Product">`;
+                    }
+                }
+            }
+
+        } else if (eventType === 'DELETE') {
+            const id = oldData.id;
+            const type = oldData.type;
+
+            if (type === 'cover') {
+                coverPhoto.src = "https://via.placeholder.com/600x200/f5e9f8/333333?text=Cover+Photo";
+                console.log('Cover photo reset.');
+            } else if (type === 'logo') {
+                profileLogo.src = "https://via.placeholder.com/100/e9f0f9/333333?text=B";
+                console.log('Logo photo reset.');
+            } else if (type === 'product') {
+                const elementToRemove = document.querySelector(`#product-slider [data-id='${id}']`);
+                if (elementToRemove) {
+                    elementToRemove.remove();
+                    console.log(`Product with id ${id} successfully removed from slider.`);
+                }
+            } else if (type === 'new_product') {
+                const elementToRemove = document.querySelector(`#new-products-display [data-id='${id}']`);
+                if (elementToRemove) {
+                    elementToRemove.remove();
+                    console.log(`New product with id ${id} successfully removed.`);
+                }
+            } else {
+                 const elementToRemove = document.querySelector(`[data-id='${id}']`);
+                 if (elementToRemove) {
+                     elementToRemove.remove();
+                     console.log(`Element with id ${id} successfully removed from an unspecified section.`);
+                 }
+            }
+        }
+    };
+
+    const scrollStep = 165;
+    document.getElementById('next-btn').addEventListener('click', () => {
+        document.getElementById('slider-wrapper').scrollLeft -= scrollStep;
+    });
+
+    document.getElementById('prev-btn').addEventListener('click', () => {
+        document.getElementById('slider-wrapper').scrollLeft += scrollStep;
+    });
+
+    window.onload = () => {
+        loadInitialData();
+        const channel = supabase.channel('photos_updates');
+        channel.on('postgres_changes', { event: '*', schema: 'public', table: 'photos' }, handleRealtimeUpdate).subscribe();
+    };
+
+    function toggleMenu() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropdown-btn') && !event.target.matches('.dropdown-btn *')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
+<script>
+    // هذه الدالة الآن في سكربت منفصل ويمكن الوصول إليها من HTML
+    function toggleMenu() {
+        const dropdown = document.getElementById("myDropdown");
+        dropdown.classList.toggle("show");
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropdown-btn')) {
+            const dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+                const openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

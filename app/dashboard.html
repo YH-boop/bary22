@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(to bottom, #f5e9f8, #e9f0f9);
+            margin: 0;
+            padding: 20px;
+            text-align: right;
+        }
+        .dashboard-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .dashboard-header h2 {
+            color: #6d1d4d;
+        }
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+        .upload-form {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .upload-form h3 {
+            color: #6d1d4d;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .form-group select, .form-group input[type="file"], .form-group input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .form-group input[type="submit"] {
+            background-color: #6d1d4d;
+            color: white;
+            cursor: pointer;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: #831566;
+        }
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .image-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .image-item img, .image-item video {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .item-actions {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .item-actions button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h2>لوحة التحكم</h2>
+            <button class="logout-btn" id="logout-btn">تسجيل خروج</button>
+        </div>
+
+        <div class="upload-form">
+            <h3>رفع محتوى جديد</h3>
+            <form id="upload-form">
+                <div class="form-group">
+                    <label for="file">اختر صورة/فيديو:</label>
+                    <input type="file" id="file" required>
+                </div>
+                <div class="form-group">
+                    <label for="type">نوع المحتوى:</label>
+                    <select id="type" required>
+                        <option value="cover">صورة الغلاف</option>
+                        <option value="logo">شعار المتجر</option>
+                        <option value="product">صور السلايدر</option>
+                        <option value="new_product">أحدث المنتجات</option>
+                    </select>
+                </div>
+                <input type="submit" value="رفع">
+            </form>
+        </div>
+
+        <div id="image-gallery" class="image-gallery">
+            </div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+        const SUPABASE_URL = 'https://tpgqbhdpsyqzpwvsmkro.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwZ3FiaGRwc3lxenB3dnNta3JvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NDA1NjMsImV4cCI6MjA3MjQxNjU2M30.I2vAeCOkz08l-EfDdeWibIRNYS-mzMYVRC0snsGNP0M';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const uploadForm = document.getElementById('upload-form');
+        const imageGallery = document.getElementById('image-gallery');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        
+
+        // Function to render an item
+        function renderItem(item) {
+            const isVideo = item.url.includes('.mp4') || item.url.includes('.mov') || item.url.includes('.webm');
+            const itemElement = document.createElement('div');
+            itemElement.className = 'image-item';
+            itemElement.dataset.id = item.id;
+            itemElement.dataset.type = item.type;
+            
+            const mediaElement = document.createElement(isVideo ? 'video' : 'img');
+            mediaElement.src = item.url;
+            if (isVideo) mediaElement.controls = true;
+
+            const actionsElement = document.createElement('div');
+            actionsElement.className = 'item-actions';
+            actionsElement.innerHTML = `
+                <span>${item.type}</span>
+                <button class="delete-btn"><i class="fas fa-trash"></i></button>
+            `;
+
+            itemElement.appendChild(mediaElement);
+            itemElement.appendChild(actionsElement);
+            imageGallery.appendChild(itemElement);
+        }
+
+        // Fetch and display all content
+        async function fetchAndDisplayContent() {
+            imageGallery.innerHTML = '';
+            const { data, error } = await supabase.from('photos').select('*');
+            if (error) {
+                console.error('Error fetching content:', error.message);
+                return;
+            }
+            data.forEach(renderItem);
+        }
+
+        // Upload new content
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            const type = document.getElementById('type').value;
+
+            if (!file) {
+                alert('الرجاء اختيار ملف.');
+                return;
+            }
+
+            const fileName = `${Date.now()}-${file.name}`;
+            const { data, error } = await supabase.storage
+                .from('images')
+                .upload(fileName, file);
+
+            if (error) {
+                console.error('Error uploading file:', error.message);
+                alert('حدث خطأ أثناء رفع الملف.');
+                return;
+            }
+
+            const publicURL = supabase.storage.from('images').getPublicUrl(fileName).data.publicUrl;
+            
+            const { error: insertError } = await supabase
+                .from('photos')
+                .insert([{ url: publicURL, type: type }]);
+            
+            if (insertError) {
+                console.error('Error saving to database:', insertError.message);
+                alert('حدث خطأ أثناء حفظ الرابط في قاعدة البيانات.');
+                return;
+            }
+            
+            alert('تم رفع المحتوى بنجاح!');
+            fetchAndDisplayContent();
+        });
+
+        // Delete content
+        imageGallery.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-btn') || e.target.closest('.delete-btn')) {
+                const itemElement = e.target.closest('.image-item');
+                const id = itemElement.dataset.id;
+                
+                if (confirm('هل أنت متأكد من حذف هذا المحتوى؟')) {
+                    const { error } = await supabase
+                        .from('photos')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) {
+                        console.error('Error deleting content:', error.message);
+                        alert('حدث خطأ أثناء حذف المحتوى.');
+                    } else {
+                        itemElement.remove();
+                    }
+                }
+            }
+        });
+
+        fetchAndDisplayContent();
+    </script>
+</body>
+</html>

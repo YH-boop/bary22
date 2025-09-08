@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>متجر بارينيا - Barenia Store</title>
@@ -18,9 +17,7 @@
             background: linear-gradient(180deg, #f5e9f8 0%, #e9f0f9 100%);
             margin: 0;
             padding: 0;
-           
             background-image: url("https://i.ibb.co/LDKG5rjK/photo.jpg");
-          
             background-position: center;
             background-attachment: fixed;
         }
@@ -112,7 +109,7 @@
             gap: 15px;
         }
         
-        .slider img {
+        .slider img, .slider video {
             flex-shrink: 0;
             width: 150px;
             height: 150px;
@@ -244,7 +241,7 @@
         .new-product-item video:hover {
             transform: scale(1.05);
         }
-        /* CSS الخاص بالقائمة المنسدلة */
+
         .dropdown {
             position: relative;
             display: inline-block;
@@ -259,15 +256,15 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            text-decoration: none; /* لإزالة خط الرابط السفلي */
+            text-decoration: none;
         }
+
         .dropdown-btn:hover {
             text-decoration: underline;
         }
 
-        /* القائمة المنسدلة نفسها */
         .dropdown-content {
-            display: none; /* إخفاء القائمة افتراضياً */
+            display: none;
             position: absolute;
             background-color: #f9f9f9;
             min-width: 160px;
@@ -275,7 +272,7 @@
             z-index: 1;
             border-radius: 5px;
             margin-top: 10px;
-            right: 0; /* لجعل القائمة تظهر في الجانب الأيمن */
+            right: 0;
         }
 
         .dropdown-content a {
@@ -295,11 +292,9 @@
             background-color: #f1f1f1;
         }
 
-        /* هذا الكلاس هو الذي يتم إضافته وإزالته بواسطة JavaScript */
         .show {
             display: block;
         }
-
     </style>
 </head>
 <body>
@@ -310,12 +305,10 @@
             <div id="myDropdown" class="dropdown-content">
                 <a href="#">منصة الابداع</a>
                 <a href="#">من نحن</a>
-        
             </div>
         </div>
         <div class="left-icons">
             <a href="#"><i class="fas fa-shopping-cart"></i></a>
-            <a href="#"><i class="fas fa-user-circle"></i></a>
             <a href="login.html"><i class="fas fa-cog"></i></a>
         </div>
     </div>
@@ -337,9 +330,9 @@
     </div>
     
     <div class="buttons-section">
-        <a href="p4.html"   class="unique-font">تصفح المنتجات</a>
-        <a href="stores.html"  class="unique-font">متاجر شركائنا</a>
-        <a href="admin.html"   class="unique-font" >تسجيل دخول اصحاب المتاجر</a>
+        <a href="p4.html" class="unique-font">تصفح المنتجات</a>
+        <a href="stores.html" class="unique-font">متاجر شركائنا</a>
+        <a href="admin.html" class="unique-font">تسجيل دخول اصحاب المتاجر</a>
         
     </div>
 
@@ -357,39 +350,58 @@
     <div id="loading-spinner" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: rgb(255, 255, 255); position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">جاري التحميل ...
         <i class="fas fa-spinner fa-spin fa-3x" style="color: #6d1d4d;"></i>
     </div>
-
-    <div class="container">
-       
-    </div>
     
-  
-
-
-    <script type="module">
+</div>
+    
+<script type="module">
     import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
     const SUPABASE_URL = 'https://tpgqbhdpsyqzpwvsmkro.supabase.co'; 
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwZ3FiaGRwc3lxenB3dnNta3JvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NDA1NjMsImV4cCI6MjA3MjQxNjU2M30.I2vAeCOkz08l-EfDdeWibIRNYS-mzMYVRC0snsGNP0M';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function loadDataFromSupabase() {
-        const loadingSpinner = document.getElementById('loading-spinner');
-        loadingSpinner.style.display = 'flex'; // Show the spinner as the first step
+    const coverPhoto = document.getElementById('cover-photo');
+    const profileLogo = document.getElementById('profile-logo');
+    const slider = document.getElementById('product-slider');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const newProductsDisplay = document.getElementById('new-products-display');
+    const loadingSpinner = document.getElementById('loading-spinner');
 
-        const coverPhoto = document.getElementById('cover-photo');
-        const profileLogo = document.getElementById('profile-logo');
-        const slider = document.getElementById('product-slider');
-        const sliderWrapper = document.getElementById('slider-wrapper');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const newProductsDisplay = document.getElementById('new-products-display');
+    function renderItem(item, container) {
+        const isVideo = item.url.includes('.mp4') || item.url.includes('.mov') || item.url.includes('.webm');
+        let element;
+
+        if (container.id === 'new-products-display') {
+            element = document.createElement('div');
+            element.className = 'new-product-item';
+            element.dataset.id = item.id;
+            element.dataset.type = item.type;
+            if (isVideo) {
+                element.innerHTML = `<video src="${item.url}" controls></video>`;
+            } else {
+                element.innerHTML = `<img src="${item.url}" alt="New Product">`;
+            }
+        } else if (container.id === 'product-slider') {
+            element = document.createElement(isVideo ? 'video' : 'img');
+            element.src = item.url;
+            element.alt = "Product Image";
+            element.dataset.id = item.id;
+            element.dataset.type = item.type;
+            if (isVideo) {
+                element.controls = true;
+            }
+        }
         
-        try {
-            const { data, error } = await supabase
-                .from('photos')
-                .select('*');
+        container.appendChild(element);
+    }
+    
+    async function loadInitialData() {
+        loadingSpinner.style.display = 'flex'; 
 
+        try {
+            const { data, error } = await supabase.from('photos').select('*');
             if (error) throw error;
-            
+
             const coverImage = data.find(item => item.type === 'cover');
             const logoImage = data.find(item => item.type === 'logo');
             const sliderImages = data.filter(item => item.type === 'product');
@@ -397,76 +409,136 @@
 
             if (coverImage) {
                 coverPhoto.src = coverImage.url;
-            } else {
-                coverPhoto.src = "https://via.placeholder.com/600x200/f5e9f8/333333?text=Cover+Photo";
+                coverPhoto.dataset.id = coverImage.id;
             }
-
             if (logoImage) {
                 profileLogo.src = logoImage.url;
-            } else {
-                profileLogo.src = "https://via.placeholder.com/100/e9f0f9/333333?text=B";
+                profileLogo.dataset.id = logoImage.id;
             }
             
             slider.innerHTML = '';
-            if (sliderImages.length > 0) {
-                sliderImages.forEach(item => {
-                    const img = document.createElement('img');
-                    img.src = item.url;
-                    img.alt = "Product Image";
-                    slider.appendChild(img);
-                });
-                prevBtn.style.display = 'block';
-                nextBtn.style.display = 'block';
-            } else {
-                const placeholder = document.createElement('p');
-                placeholder.textContent = "لا توجد صور للمنتجات.";
-                slider.appendChild(placeholder);
-                prevBtn.style.display = 'none';
-                nextBtn.style.display = 'none';
-            }
+            sliderImages.forEach(item => renderItem(item, slider));
             
             newProductsDisplay.innerHTML = '';
-            newProducts.forEach(item => {
-                const productDiv = document.createElement('div');
-                productDiv.className = 'new-product-item';
-                
-                const isVideo = item.url.includes('.mp4') || item.url.includes('.mov') || item.url.includes('.webm');
-                if (isVideo) {
-                    productDiv.innerHTML = `<video src="${item.url}" controls></video>`;
-                } else {
-                    productDiv.innerHTML = `<img src="${item.url}" alt="New Product">`;
-                }
-                newProductsDisplay.appendChild(productDiv);
-            });
+            newProducts.forEach(item => renderItem(item, newProductsDisplay));
+            
+            if (sliderImages.length === 0) {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            } else {
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+            }
 
         } catch (error) {
             console.error('Error fetching data:', error.message);
         } finally {
-            // This block always runs, whether the try block succeeds or fails
-            loadingSpinner.style.display = 'none'; // Hide the spinner at the end
+            loadingSpinner.style.display = 'none';
         }
-
-        const scrollStep = 165; 
-        document.getElementById('next-btn').addEventListener('click', () => {
-            sliderWrapper.scrollLeft -= scrollStep;
-        });
-
-        document.getElementById('prev-btn').addEventListener('click', () => {
-            sliderWrapper.scrollLeft += scrollStep;
-        });
     }
 
-    const channel = supabase.channel('realtime_photos');
-    channel.on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'photos' },
-        (payload) => {
-            console.log('Change received!', payload);
-            loadDataFromSupabase(); 
-        }
-    ).subscribe();
+    const handleRealtimeUpdate = (payload) => {
+        const { eventType, new: newData, old: oldData } = payload;
+        
+        if (eventType === 'INSERT') {
+            if (newData.type === 'cover') {
+                coverPhoto.src = newData.url;
+                coverPhoto.dataset.id = newData.id;
+            } else if (newData.type === 'logo') {
+                profileLogo.src = newData.url;
+                profileLogo.dataset.id = newData.id;
+            } else if (newData.type === 'product') {
+                renderItem(newData, slider);
+            } else if (newData.type === 'new_product') {
+                renderItem(newData, newProductsDisplay);
+            }
+            
+        } else if (eventType === 'UPDATE') {
+            if (newData.type === 'cover') {
+                coverPhoto.src = newData.url;
+            } else if (newData.type === 'logo') {
+                profileLogo.src = newData.url;
+            } else {
+                const element = document.querySelector(`[data-id='${newData.id}']`);
+                if (!element) return;
+                
+                const isVideo = newData.url.includes('.mp4') || newData.url.includes('.mov') || newData.url.includes('.webm');
+                if (element.tagName.toLowerCase() === 'img' || element.tagName.toLowerCase() === 'video') {
+                    element.src = newData.url;
+                    if (isVideo) element.controls = true; else element.removeAttribute('controls');
+                } else if (element.className.includes('new-product-item')) {
+                    if (isVideo) {
+                        element.innerHTML = `<video src="${newData.url}" controls></video>`;
+                    } else {
+                        element.innerHTML = `<img src="${newData.url}" alt="New Product">`;
+                    }
+                }
+            }
 
-    window.onload = loadDataFromSupabase;
+        } else if (eventType === 'DELETE') {
+            const id = oldData.id;
+            const type = oldData.type;
+
+            if (type === 'cover') {
+                coverPhoto.src = "https://via.placeholder.com/600x200/f5e9f8/333333?text=Cover+Photo";
+                console.log('Cover photo reset.');
+            } else if (type === 'logo') {
+                profileLogo.src = "https://via.placeholder.com/100/e9f0f9/333333?text=B";
+                console.log('Logo photo reset.');
+            } else if (type === 'product') {
+                const elementToRemove = document.querySelector(`#product-slider [data-id='${id}']`);
+                if (elementToRemove) {
+                    elementToRemove.remove();
+                    console.log(`Product with id ${id} successfully removed from slider.`);
+                }
+            } else if (type === 'new_product') {
+                const elementToRemove = document.querySelector(`#new-products-display [data-id='${id}']`);
+                if (elementToRemove) {
+                    elementToRemove.remove();
+                    console.log(`New product with id ${id} successfully removed.`);
+                }
+            } else {
+                 const elementToRemove = document.querySelector(`[data-id='${id}']`);
+                 if (elementToRemove) {
+                     elementToRemove.remove();
+                     console.log(`Element with id ${id} successfully removed from an unspecified section.`);
+                 }
+            }
+        }
+    };
+
+    const scrollStep = 165;
+    document.getElementById('next-btn').addEventListener('click', () => {
+        document.getElementById('slider-wrapper').scrollLeft -= scrollStep;
+    });
+
+    document.getElementById('prev-btn').addEventListener('click', () => {
+        document.getElementById('slider-wrapper').scrollLeft += scrollStep;
+    });
+
+    window.onload = () => {
+        loadInitialData();
+        const channel = supabase.channel('photos_updates');
+        channel.on('postgres_changes', { event: '*', schema: 'public', table: 'photos' }, handleRealtimeUpdate).subscribe();
+    };
+
+    function toggleMenu() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropdown-btn') && !event.target.matches('.dropdown-btn *')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
 </script>
 <script>
     // هذه الدالة الآن في سكربت منفصل ويمكن الوصول إليها من HTML

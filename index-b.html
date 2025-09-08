@@ -354,7 +354,7 @@
 </div>
     
 <script type="module">
-    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
     const SUPABASE_URL = 'https://tpgqbhdpsyqzpwvsmkro.supabase.co'; 
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwZ3FiaGRwc3lxenB3dnNta3JvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NDA1NjMsImV4cCI6MjA3MjQxNjU2M30.I2vAeCOkz08l-EfDdeWibIRNYS-mzMYVRC0snsGNP0M';
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -540,24 +540,3 @@
         }
     }
 </script>
-<script>
-    // هذه الدالة الآن في سكربت منفصل ويمكن الوصول إليها من HTML
-    function toggleMenu() {
-        const dropdown = document.getElementById("myDropdown");
-        dropdown.classList.toggle("show");
-    }
-
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropdown-btn')) {
-            const dropdowns = document.getElementsByClassName("dropdown-content");
-            for (let i = 0; i < dropdowns.length; i++) {
-                const openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
-    }
-</script>
-</body>
-</html>
